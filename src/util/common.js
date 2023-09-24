@@ -10,4 +10,6 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export {getRandomInRange, getRandomArrayElement, updateItem};
+const toCapitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
+
+export {getRandomInRange, getRandomArrayElement, updateItem, toCapitalize};

@@ -1,12 +1,11 @@
 import EventEditView from '../view/event-edit-view';
 import PointView from '../view/point-view';
+import { render, replace, remove } from '../framework/render';
 
 const MODE = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
 };
-
-import { render, replace, remove } from '../framework/render';
 
 export default class PointPresenter {
   #container = null;
@@ -36,7 +35,7 @@ export default class PointPresenter {
 
     this.#pointComponent = new PointView({
       point: this.#point,
-      pointDestination: this.#destinationsModel.getById(point.destination),
+      pointDestinations: this.#destinationsModel.getById(point.destination),
       pointOffers: this.#offersModel.getByType(point.type),
       onEditBtnClick: this.#handleEditBtnClick,
       onFavoriteClick: this.#handleFavoriteClick
@@ -44,8 +43,8 @@ export default class PointPresenter {
 
     this.#editPointComponent = new EventEditView({
       point: this.#point,
-      pointDestination: this.#destinationsModel.getById(point.destination),
-      pointOffers: this.#offersModel.getByType(point.type),
+      pointDestinations: this.#destinationsModel.get(),
+      pointOffers: this.#offersModel.get(),
       onFormSubmit: this.#handleFormSubmit,
       onHideBtnClick: this.#handleHideBtnClick
     });
@@ -74,6 +73,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== MODE.DEFAULT) {
+      this.#editPointComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
@@ -92,6 +92,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editPointComponent.reset(this.#point);
       this.#replaceFormToPoint();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
@@ -109,6 +110,7 @@ export default class PointPresenter {
   };
 
   #handleHideBtnClick = () => {
+    this.#editPointComponent.reset(this.#point);
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
