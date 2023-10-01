@@ -116,6 +116,13 @@ const MODE = {
   EDITING: 'EDITING',
 };
 
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
 export {
   POINT_COUNT,
   CITIES,
@@ -137,5 +144,6 @@ export {
   NoPointText,
   EditType,
   POINT_EMPTY,
-  MODE
+  MODE,
+  Method
 };
