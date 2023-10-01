@@ -4,7 +4,11 @@ export default class DestinationsModel {
 
   constructor(service) {
     this.#service = service;
-    this.#destinations = this.#service.getDestinations();
+  }
+
+  async init() {
+    this.#destinations = await this.#service.getDestinations();
+    return this.#destinations;
   }
 
   get() {
