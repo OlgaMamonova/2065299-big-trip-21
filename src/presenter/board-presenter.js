@@ -146,6 +146,9 @@ export default class BoardPresenter {
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#renderBoard();
+        break;
     }
   };
 
