@@ -77,6 +77,42 @@ export default class PointPresenter {
     }
   }
 
+  setSaving = () => {
+    if(this.#mode === MODE.EDITING) {
+      this.#editPointComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setDeleting = () => {
+    if(this.#mode === MODE.EDITING) {
+      this.#editPointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if(this.#mode === MODE.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+    if(this.#mode === MODE.EDITING) {
+      const resetFormState = () => {
+        this.#editPointComponent.updateElement({
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        });
+      };
+
+      this.#editPointComponent.shake(resetFormState);
+    }
+  };
+
   #replacePointToForm() {
     replace(this.#editPointComponent, this.#pointComponent);
     this.#handleModeChange();

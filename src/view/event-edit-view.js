@@ -95,6 +95,18 @@ function createDestinationTemplate(isDestination, currentDestination) {
   `);
 }
 
+function createButtonTemplate(isCreating, isDeleting, isDisabled) {
+  if (isCreating) {
+    return /*html*/`
+      <button class="event__reset-btn" type="reset">Cancel</button>
+    `;
+  }
+  return /*html*/`
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting' : 'Delete'}</button>
+    <button class="event__rollup-btn" type="button"><span class="visually-hidden">Open event</span></button>
+    `;
+}
+
 function createEventEditTemplate({ state, pointDestinations, pointOffers, editMode}) {
   const {
     type,
@@ -103,14 +115,18 @@ function createEventEditTemplate({ state, pointDestinations, pointOffers, editMo
     dateTo,
     offers
   } = state.point;
+
+  const {
+    isDisabled,
+    isSaving,
+    isDeleting
+  } = state;
+
   const offersByType = pointOffers.find((item) => item.type.toLowerCase() === type.toLowerCase()).offers;
   const currentDestination = pointDestinations.find((item) => item.id === state.point.destination);
 
   const isCreating = editMode === EditType.CREATING;
-  const rollUpTemplate = () => /*html*/ `
-  <button class="event__rollup-btn" type="button">
-    <span class="visually-hidden">Open event</span>
-  </button>`;
+
 
   const isOffers = offersByType.length > 0;
   const isDestination = currentDestination?.pictures.length > 0 || currentDestination?.description;
@@ -146,11 +162,8 @@ function createEventEditTemplate({ state, pointDestinations, pointOffers, editMo
           ${createDateTemplate(dateFrom, dateTo, isCreating)}
           ${createPriceTemplate(basePrice)}
           
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${isCreating ? 'Cancel' : 'Delete'}</button>
-          ${isCreating ? '' : rollUpTemplate()}
-            <span class="visually-hidden">Open event</span>
-          </button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>
+          ${createButtonTemplate(isCreating, isDeleting, isDisabled)}
         </header>
         <section class="event__details">
           ${createOffersTemplate(isOffers, offersByType, offers)}
@@ -285,7 +298,6 @@ export default class EventEditView extends AbstractStatefulView {
         destination: currentDestinationId
       }
     });
-
   };
 
   #offerChangeHandler = () => {
@@ -362,6 +374,16 @@ export default class EventEditView extends AbstractStatefulView {
     );
   };
 
-  static parsePointToState = ({point}) => ({point});
+  static parsePointToState = ({
+    point,
+    isDisabled = false,
+    isSaving = false,
+    isDeleting = false,
+  }) => ({
+    point,
+    isDisabled,
+    isSaving,
+    isDeleting,});
+
   static parseStateToPoint = (state) => state.point;
 }
