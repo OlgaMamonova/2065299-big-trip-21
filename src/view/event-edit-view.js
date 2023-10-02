@@ -332,6 +332,7 @@ export default class EventEditView extends AbstractStatefulView {
     const [dateFromElement, dateToElement] = this.element.querySelectorAll('.event__input--time');
 
     const commonConfig = {
+      allowInput: true,
       dateFormat: 'd/m/y H:i',
       enableTime: true,
       local: {
