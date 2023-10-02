@@ -52,4 +52,3 @@ filterPresenter.init();
 boardPresenter.init();
 pointsModel.init();
 
-console.log(pointsModel.points);
